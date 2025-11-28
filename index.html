@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VTV - Vietnam's Leading Television Catalogue</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Rock+Salt&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        vtv: {
+                            red: '#e60000', // VTV Red color approximation
+                            dark: '#1a1a1a',
+                            black: '#0a0a0a'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        grunge: ['"Rock Salt"', 'cursive'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+	
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-vtv-black text-white font-sans antialiased overflow-x-hidden">
+
+    <!-- Container chính để render nội dung (Home hoặc Detail) -->
+    <div id="app"></div>
+
+    <!-- MAIN SCRIPT -->
+    <script>
+        // ==========================================
+        // 1. DATA (JSON CONFIGURATION)
+        // ==========================================
+        const db = {
+            hero: {
+                id: "hero-01",
+                title: "Welcome to our\nVietnam's Leading\nTelevision Catalogue",
+                subtitle: "Discover premium dramas, entertainment formats and factual shows from VTV3.",
+                // decorativeText: "LIFE IS STILL BEAUTIFUL",
+                // Đã đổi sang đường dẫn file nội bộ của bạn. 
+                // onerror sẽ load ảnh mẫu nếu chưa có file local.
+                bgImage: "./images/hero_background.jpg", 
+                fallbackBg: "https://images.unsplash.com/photo-1595769816263-9b910be24d5f?q=80&w=2079&auto=format&fit=crop",
+                videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+            },
+            
+            introBlocks: [
+                {
+                    id: "intro-1",
+                    title: "VTV is Vietnam's national television broadcaster",
+                    desc: "Producing diverse content across drama, entertainment, factual and cultural programming for audiences in Vietnam and beyond.",
+                    // Đã đổi sang 1 ảnh duy nhất từ kho nội bộ
+                    image: "./images/8.jpg",
+                    fallbackImage: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=800&auto=format&fit=crop",
+                    layout: "left-image" // image left, text right
+                },
+                {
+                    id: "intro-2",
+                    title: "Our Programmes",
+                    desc: "Explore a rich library of content that reflects the heart and soul of Vietnam.",
+                    // Đã đổi sang 1 ảnh duy nhất từ kho nội bộ
+                    image: "./images/11.jpg",
+                    fallbackImage: "https://images.unsplash.com/photo-1522869635100-8f47562533f5?w=800&auto=format&fit=crop",
+                    layout: "right-image" // text left, image right
+                }
+            ],
+
+            categories: [
+                {
+                    id: "cat-travel",
+                    name: "Travel",
+                    suffix: "& Food",
+                    color: "text-green-500",
+                    description: "Discover Vietnam's culture, cuisine and landscapes through immersive travel and food shows.",
+                    items: [
+                        { id: "t1", title: "S – Vietnam: Discover a New Vietnam!", desc: "Launched in 2010, \"S – Vietnam\" is a carefully crafted reality programme dedicated to promoting Vietnamese culture and tourism. Each episode is a warm and refreshing journey into the stories of the land and its people. Through the eyes of young Vietnamese travellers, the strand highlights cultural diversity, a love for life, and optimism for the future. With S – Vietnam, viewers discover a beautiful, heartfelt Vietnam - no matter where they are in the world.", episode: 52, duration: 15, img: "images/travel/s_vn.png" },
+                        { id: "t2", title: "Explore Vietnam: Uncovering Forgotten Stories", desc: "With the message \"no one and nothing should be forgotten,\" Explore Vietnam brings viewers to remote places, untold stories, and unique cultural colours that were once hidden from the spotlight. The series honours national heroes, historical figures, and ordinary people who accomplish extraordinary things. Aimed especially at younger generations, the programme inspires love for the country, admiration for its people, and the motivation to live beautifully and contribute to a brighter future.", episode: 104, duration: 13, img: "images/travel/discover_vn.png" },
+						{ id: "t3", title: "Check-in Guide", desc: "Check-in Guide is a travel handbook for those who love to explore. Each episode takes viewers on a journey to discover unique cultural, culinary, and human experiences - beautifully wrapped within a 1-kilometre radius of a highlighted location.", episode: 1, duration: 60, img: "images/travel/checkin_guide.png" },
+						{ id: "t4", title: "Amazing Vietnam – A Captivating Portrait of the Nation", desc: "Amazing Vietnam is a short-format program showcasing the country’s diversity through stunning imagery of its landscapes, cities, people, and ongoing development. Each episode presents a vivid snapshot of Vietnam’s distinctive values across a range of cultural and social themes—revealing a nation dynamic, beautiful, and ever-evolving.", episode: 1, duration: 60, img: "images/travel/amazing_vn.png" },
+						{ id: "t5", title: "Flavours & Beyond", desc: "Flavours & Beyond invites international guests to explore the cultural and culinary richness of Vietnam. The program delves into familiar local ingredients—reimagining and transforming them into fine-dining creations where traditional Vietnamese flavors meet modern creativity. It is a culinary journey that celebrates innovation while honoring the soul of Vietnamese cuisine.", episode: 1, duration: 60, img: "images/travel/flavor.png" },
+						{ id: "t6", title: "Heritage Journey", desc: "Heritage Journey is a cinematic documentary series showcasing Vietnam’s UNESCO-recognized cultural, natural, and human heritage. Each episode unfolds like a visual poem—told through cinematic storytelling and interwoven with the voices of those who preserve, inspire, and connect the past with the present. A tribute to Vietnam’s heritage in all its depth and beauty.", episode: 1, duration: 60, img: "images/travel/heritage.png" },
+						{ id: "t7", title: "Street Food", desc: "Street Food takes audiences on a flavorful journey across Vietnam’s vibrant streets—where the aroma of grilled dishes, simmering broths, and sizzling pans tells the story of a rich and lively food culture.Each episode follows a foreign traveler exploring Vietnam’s street food scene with the help of local companions. Together, they uncover not only the taste but also the heart, history, and heritage behind every dish and every vendor.", episode: 1, duration: 60, img: "images/travel/street_food.png" }
+                    ]
+					
+                },
+                {
+                    id: "cat-music",
+                    name: "Music",
+                    //suffix: "& Series",
+                    color: "text-purple-500",
+                    description: "Gripping stories of love, family, and history that captivate millions of viewers.",
+                    items: [
+                        { id: "m1", title: "Melodies of Spring", desc: "Melodies of Spring is an annual Lunar New Year music gala, a cherished cultural gift broadcast on the 28th or 29th day of Tet - an indispensable tradition for Vietnamese families.", episode: 1, duration: 120, img: "images/music/hoa_xuan_ca.jpg" },
+                        { id: "m2", title: "V Fest: A Festival of Youth", desc: "V Fest is a massive outdoor youth festival where more than 25,000 attendees come together in an electrifying music venue powered by world-class sound, lighting, and technology. The event features leading artists and embodies a youthful, dynamic spirit that ignites passion and spreads the message of 'Vietnamese Inspiration.' Notably, V Fest partners with the Library of Joy initiative, transforming every moment of artistic exhilaration into meaningful, tangible community impact.", episode: 1, duration: 120, img: "images/music/v_fest.jpg" },
+                        { id: "m3", title: "V Concert: A Spectacular Celebration of Vietnamese Pride!", desc: "V Concert – Radiant Vietnam is not merely a music festival; it is a true national concert, set apart by its unprecedented scale and artistic excellence.The event gathers Vietnam's top-tier artists to create a mesmerising fusion of traditional essence and contemporary innovation. V Concert is a grand artistic feast - radiating national pride, cultural identity, and social responsibility. Get ready to experience a night that honours Vietnamese culture and restates VTV's leading position in the industry.", episode: 1, duration: 120, img: "images/music/v_concert.jpg" },
+                        { id: "m4", title: "Talent Rendezvous 2025: Where New Stars Are Born!", desc: "\"Talent Rendezvous 2025\" is a pioneering show designed to discover and train a new generation of gifted performers - serving both the audience and the nation, with music and culture at its heart. Its unique format develops every essential skill: vocal performance, stage presence, musical thinking, and image building. The show stands out with its high-tech stage featuring immersive AR, delivering extraordinary visual experiences while honouring Vietnamese performing arts and cultural expression.", episode: 4, duration: 120, img: "images/music/diemhentainang.png" },
+						{ id: "m5", title: "The Music Bus: A \"Super Chill\" Journey Through Nature!", desc: "\"The Music Bus\" blends music, travel, and community experiences into a refreshing and heartfelt adventure. Each episode takes artists to breathtaking landscapes, creating unique outdoor stages where music resonates harmoniously with nature. With the presence of much-loved stars and rising young talents, the show offers touching stories, unforgettable emotions, and immersive interactions - spreading positive energy and showcasing the beauty of Vietnam's land and people.", episode: 15, duration: 60, img: "images/music/chuyenxeamnhac.png" },
+                    ]
+                },
+                 {
+                    id: "cat-sports",
+                    name: "Sports",
+                    //suffix: "& Factual",
+                    color: "text-yellow-500",
+                    description: "Exciting sports events, competitions and inspiring human stories.",
+                    items: [
+                        { id: "s1", title: "VTV Cup: A Premier International Women’s Volleyball Tournament!", desc: "The VTV Cup International Women’s Volleyball Tournament is a prestigious annual sporting event (established in 2004), bringing together Vietnam’s national team and many powerful international squads. This 10-day competition delivers top-tier excitement, enhanced by the use of advanced Video Challenge Eyes technology. Beyond the thrilling matches, the VTV Cup offers a rich cultural experience, allowing teams to explore local beauty spots and create a complete sports-culture event that captivates audiences around the world.", episode: 24, duration: 90, img: "images/sports/vtv_cup.png" },
+                        
+                    ]
+                },
+				{
+                    id: "cat-entertainment",
+                    name: "Entertainment",
+                    //suffix: "& Factual",
+                    color: "text-blue-500",
+                    description: "Popular entertainment shows, games, reality formats and prime-time programmes.",
+                    items: [
+                        { id: "e1", title: "A Date with Youth: A Journey of Emotions", desc: "“A Date with Youth” is VTV’s unique reality series with the message: “Youth lives forever in each of us.” Celebrities and beloved guests embark on thrilling challenges and relive their youthful spirit through breathtaking experiential routes across Vietnam. Each episode explores iconic destinations filled with emotion and discovery. More than a journey back in time, the programme builds a positive link between generations - sharing inspiration, joy, and the belief that youth never truly fades.", episode: 10, duration: 70, img: "images/entertainment/thanhxuan.png" },
+                        { id: "e2", title: "Road to Mount Olympia: Vietnam’s Iconic Academic Arena", desc: "\"The Road to Mount Olympia\" is VTV's longest-standing and prestigious knowledge-based game show, on air since 1999. It is the ultimate academic arena for high school students nationwide, where contestants compete for the revered Laurel Wreath through four legendary rounds: Warm-Up, Obstacle, Acceleration, and Finish. More than a competition, Olympia ignites a passion for learning and has become a launching pad for generations of talented Vietnamese students to reach the global stage. ", episode: 52, duration: 45, img: "images/entertainment/olympia.png" },
+                        { id: "e3", title: "King of Vietnamese: A Battle of Linguistic Brilliance!", desc: "\"The King of Vietnamese\" is a one-of-a-kind intellectual gameshow created by VTV to honour and elevate the national language. Talented contestants face intense challenges in spelling, grammar, and cultural knowledge - turning each round into a vibrant celebration of the Vietnamese language. More than a competition, the show nurtures language skills and sparks pride in preserving and enriching the beauty of the Vietnamese language within the community.", episode: 50, duration: 60, img: "images/entertainment/kingofvnm.png" }
+                    ]
+                },
+				{
+                    id: "cat-documentary",
+                    name: "Documentary",
+                    //suffix: "& Factual",
+                    color: "text-red-500",
+                    description: "High-quality factual and documentary content capturing Vietnamese culture, history and nature.",
+                    items: [
+                        { id: "d1", title: "My Grandmother, My Mother, My Sisters”: A Tribute to the Courage of Vietnamese Women", desc: "This documentary paints a moving, multi-layered portrait of three extraordinary Vietnamese women and the storms they have overcome. Viewers follow the journey of a People's Artist fighting to reclaim a full life after a major health setback; a former soldier who builds a livelihood from nothing with resilience and dignity; and a young ethnic minority woman who bravely confronts oppressive customs in her pursuit of equality and self-determination. The film is a powerful ode to the enduring strength, courage, and unyielding spirit of Vietnamese women in the face of every hardship.", episode: 1, duration: 25, img: "images/documentary/bmt.png" },
+                        { id: "d2", title: "Where We Belong: When Vietnam Becomes Home", desc: "This documentary tells the remarkable story of a US hospital department head who made a \"crazy\" decision: to sell everything and move to Vietnam as a volunteer. For more than 20 years, Virginia Mary Lockett has dedicated herself to providing free rehabilitation services in Danang. Her unconditional love and service transformed Vietnam from a place of work into a true home - a homeland of the heart.", episode: 1, duration: 31,  img: "images/documentary/homeland.png" },
+                        { id: "d3", title: "The Yellow-Cheeked Crested Gibbon: Messenger of the Ancient Forest", desc: "Deep in the vast southeastern forests of Vietnam, the yellow-cheeked crested gibbon quietly tells a story of survival - and a looming threat of disappearance.It is one of Vietnam's rarest primate species. Its striking colours and echoing calls are not only testimony to the rainforest's majestic biodiversity, but also a vital ecological indicator of the forest's health. The film urges viewers to listen to the urgent message this fragile yet extraordinary ambassador of nature is sending.", episode: 1, duration: 28, img: "images/documentary/gibbon.png" },
+						{ id: "d4", title: "Con Dao National Park: Treasures of the Wild", desc: "Vietnam is home to rich ecosystems and numerous endangered species listed in the Red Book - yet their dense and rugged habitats make sightings in the wild exceedingly rare. Con Dao National Park is a remarkable exception. Here, wildlife appears naturally and frequently, following the rhythms of the ecosystem. \"The Treasures of the National Park\" captures fascinating and authentic stories of survival - spotlighting the unique species that define this extraordinary natural haven.", episode: 1, duration: 23,  img: "images/documentary/condao_national_park.png" },
+						{ id: "d5", title: "Khai's Walk", desc: "The film tells the story of a young boy named Nguyen Dong Khai. From birth, he has lived without both arms. Life could have been unimaginably difficult for him. Yet, against all odds, through his own determination, he has learned to use his feet in place of his hands—for daily activities, for writing, for going to school, and even for playing games with his friends. What is most striking about this boy is not sadness or despair, but rather his bright face, filled with joy, optimism, and positivity. He embodies the very spirit of resilience, and he stands as a beautiful symbol of a peaceful life, nurtured by the love of his family and the warm embrace of friendship.", episode: 1, duration: 30,  img: "images/documentary/khai_walk.png" },
+						{ id: "d6", title: "Fragments of Memory", desc: "\"Fragments of Memory\" follows the emotional efforts of Vietnamese search teams and U.S. veterans as they work to locate wartime remains more than half a century after the conflict. The documentary traces parallel journeys—past and present, grief and healing—as both sides confront memories long buried yet deeply felt. It is a moving portrayal of closure, reconciliation, and the enduring hope to mend wounds of war.", episode: 1, duration: 60,  img: "images/documentary/manhkyuc.png" },
+						{ id: "d7", title: "The Battle of Wills", desc: "This two-part VTV Special documentary offers a profound perspective on the Vietnam War through the eyes of Craig McNamara, son of former U.S. Secretary of Defense Robert McNamara. The first episode dives into the mindset of Robert McNamara, who approached the war with a data-driven, managerial strategy. The documentary argues that his calculations failed because they overlooked one defining “X factor”: the unbreakable spirit and enduring determination of the Vietnamese people. This theme forms the philosophical backbone of the series—showing that the war was not merely a contest of force, but a confrontation between measurable metrics and the immeasurable strength of human will. The second episode follows Craig McNamara's deeply personal transformation—from a son witnessing his father's deceptions to a committed anti-war activist, a journey he recounts in his memoir Because Our Fathers Lied.Traveling to Vietnam, he retraces the war’s legacy, visiting battlefields and speaking with witnesses in his search for truth. The emotional peak of the film is Craig’s act of atonement at Trường Sơn National Martyrs’ Cemetery, where he offers a heartfelt apology on behalf of his father—an apology Robert McNamara never made.Told from a uniquely American viewpoint, the documentary honors the courage and resilience of the Vietnamese people while delivering a powerful narrative of healing and reconciliation between Vietnam and the United States.", episode: 1, duration: 60,  img: "images/documentary/battleofwill.png" },
+                    ]
+                },
+				{
+                    id: "cat-special",
+                    name: "VTV Specials",
+                    //suffix: "& Factual",
+                    color: "text-azure-500",
+                    description: "Signature long-form productions exploring major cultural, historical and social themes.",
+                    items: [
+                        { id: "sp1", title: "Seeds of Happiness: A Journey of Sharing Agricultural Knowledge", desc: "\"Seeds of Happiness\" is a touching documentary about Vietnam’s efforts to share agricultural knowledge with the international community - especially Cuba. The film documents the transfer of CT16 rice seeds and the untold sacrifices of Vietnamese experts who brought this project to life. More than a story of long-standing cooperation, it is solid proof of Vietnam's contribution to global food security. This documentary is to be broadcast in both Vietnam and Cuba.", episode: 1, duration: 60, img: "images/specials/seed.png" }
+                    ]
+                },
+				{
+                    id: "cat-animation",
+                    name: "Animation",
+                    //suffix: "& Factual",
+                    color: "text-orange-500",
+                    description: "Vietnamese animated series and short films for children and families.",
+                    items: [
+                        { id: "a1", title: "Little Wonders – Cherishing Friends", desc: "A child’s quarrel mirrors the bigger conflicts of the world. Through his grandfather’s wartime memories and a boy’s resilience in a war-torn country, Bi Bi learns that peace begins with kindness — inspiring him to rebuild friendship and cherish harmony.", episode: 1, duration: 30, img: "images/animation/tinhban.jpeg" }
+                    ]
+                },
+				{
+                    id: "cat-drama",
+                    name: "Drama",
+                    //suffix: "& Factual",
+                    color: "text-blue-500",
+                    description: "High-quality Vietnamese dramas featuring strong storytelling, emotional depth and universal themes.",
+                    items: [
+                        { id: "dr1", title: "Milkwood Blossoms in the Wind", desc: "Milkwood Blossoms in the Wind is a gentle and heartfelt drama about family bonds in a three-generation household. The story follows Mrs Truc, a widowed former personnel officer who is intelligent and strong-willed, yet sometimes overbearing. Her two grown children, Hieu and Thuan, each face their own struggles in marriage, parenting, and unspoken family expectations. Different viewpoints create distance, and small misunderstandings turn into emotional challenges for everyone. The series follows each character as they learn to love with more understanding, let go of rigid expectations, and rebuild connection. Warm, simple, and deeply human, “Milkwood Blossoms in the Wind” celebrates the quiet strength of family love and the tenderness that keeps people close.", episode: 56, duration: 30, img: "images/drama/hoasuatronggio.jpg" },
+                        { id: "dr2", title: "The Black Remedy", desc: "Twenty years after a brutal crime claimed his mother’s life, Tuan, a brilliant and courageous young police officer, returns to the criminal investigation unit led by Captain Tuyen, the very man who witnessed the tragedy. From his first days on the job, a mysterious case unfolds: the sudden death of Trinh Quong Vuong, the infamous leader of the Cityboy party crew. Lurking behind tangled clues and cunning suspects is a never-before-seen substance - \"the black remedy\" - opening the door to a chilling conspiracy.Each solved case reveals another layer of darkness, where people sacrifice morality, family, and even life itself for power and desire.", episode: 27, duration: 45, img: "images/drama/bietduocden.jpg" },
+                        { id: "dr3", title: "Across Time", desc: "\"Across Time\" is a journey woven between two eras - war and peace - portraying the heroic yet deeply human spirit of the Vietnamese soldier, the \"Soldiers of Uncle Ho\" In a timeline of the past, the series brings viewers back to Field Hospital T1 during the fiercest years of the war against the US. There we meet Dr Le Van Nam, steadfast and selfless; nurse Hoang Thi Hoi, gentle yet resilient; and wounded soldier Tran Manh Cuong, courageous even on the brink of life and death. Amid chaos, they hold onto faith, love, and ideals. Parallel to this is the present-day story of Lieutenant Colonel Le Nguyen Dai - a modern-day soldier facing natural disasters, pandemics, and hidden threats.Two timelines intertwine, reflect, and continue one another, creating a sweeping portrait of the Vietnamese soldier - fearless in wartime, steadfast in peace. \"Across Time\" is a moving symphony of patriotism and the quiet heroism of ordinary people who live and serve for the people.", episode: 60, duration: 30, img: "images/drama/kothoigian.jpg" },
+						{ id: "dr4", title: "Life Is Still Beautiful", desc: "Set in the damp alleyways and bustling calls of a wholesale market, “Life Is Still Beautiful” paints an honest and deeply touching portrait of ordinary yet resilient lives. The series introduces two characters: Luyen, a hardworking woman whose wounded heart remains unbroken, and Luu, an eccentric porter, rough around the edges but loyal and kind. Amid their struggles and within the humble boarding house community, quiet gestures of humanity weave people together through every hardship. It is not only about survival - it is a hymn to hope, kindness, and the longing for happiness. \"Life Is Still Beautiful\" gently reminds us that even in the darkest moments, human compassion is the most beautiful light.", episode: 46, duration: 45, img: "images/drama/cuocdoi.jpg" },
+						{ id: "dr5", title: "Suddenly, Our Family Is Happy", desc: "This series offers a fresh, modern, and heartfelt look at family relationships in contemporary Vietnamese life. Centred on the household of Mr Toai and Mrs Cuc, where all three sons live under the same roof with their wives and children, the story follows constant clashes, misunderstandings, and unexpected secrets.Yet whenever conflicts threaten to pull them apart, love and forgiveness become the invisible threads that draw them back together.Without exaggeration or melodrama, the series uses gentle humour and everyday stories to portray how each family member learns to love, understand, and grow. \"Our Family Is Suddenly Happy\" makes us laugh, tear up, and realise that happiness often arrives in the most unexpected ways.", episode: 56, duration: 45, img: "images/drama/giadinh.jpg" },
+                    ]
+                },
+				
+            ],
+
+            featured: {
+                title: "VTV produces diverse, high-quality programming supported by strong creative and production teams.",
+                items: [
+					 { id: "f1", title: " ", img: "images/features/12.jpg" },
+					 { id: "f2", title: " ", img: "images/features/13.jpg" },
+					 { id: "f3", title: "", img: "images/features/14.jpg" },
+					 { id: "f4", title: "", img: "images/features/15.jpg" }
+                ]
+            }
+        };
+
+        // ==========================================
+        // 2. STATE & HELPER FUNCTIONS
+        // ==========================================
+        
+        // Render Icons (call after DOM updates)
+        function refreshIcons() {
+            lucide.createIcons();
+        }
+
+        // Mock function to find an item by ID from any category
+        function getItemById(id) {
+            // Check Hero
+            if(db.hero.id === id) return { ...db.hero, type: 'Highlight' };
+            
+            // Check Categories
+            for(let cat of db.categories) {
+                const found = cat.items.find(i => i.id === id);
+                if(found) return { ...found, description: cat.description, category: cat.name };
+            }
+
+            // Check Featured
+            const foundFeat = db.featured.items.find(i => i.id === id);
+            if(foundFeat) return { ...foundFeat, description: "A featured highlight production.", category: "Featured" };
+
+            // Default fallback
+            return { 
+                id: id, 
+                title: "Unknown Title", 
+                img: "https://via.placeholder.com/1920x1080", 
+                description: "Description not found for this item.",
+                category: "General"
+            };
+        }
+
+        // ==========================================
+        // 3. COMPONENTS (HTML String Generators)
+        // ==========================================
+
+        const Header = () => `
+            <header class="fixed top-0 w-full z-50 bg-gradient-to-r from-vtv-red to-red-800 shadow-lg">
+                <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                    <button class="text-white hover:bg-white/20 p-2 rounded-full transition">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                    
+                    <div class="flex items-center gap-2 cursor-pointer" onclick="navigateToHome()">
+                        <!-- Updated VTV Logo -->
+                        <div class="h-10 rounded flex items-center justify-center px-2 shadow-sm">
+                             <img src="images/logo-vtv.png" alt="VTV" class="h-10 w-auto">
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4 text-white">
+                        <i data-lucide="facebook" class="w-5 h-5 cursor-pointer hover:text-gray-200"></i>
+                        <i data-lucide="youtube" class="w-5 h-5 cursor-pointer hover:text-gray-200"></i>
+                        <i data-lucide="instagram" class="w-5 h-5 cursor-pointer hover:text-gray-200"></i>
+                    </div>
+                </div>
+            </header>
+        `;
+
+        const Hero = (data) => `
+            <section class="relative h-screen w-full overflow-hidden flex items-center">
+                <!-- Background with Overlay -->
+                <!-- Thêm onerror để fallback nếu chưa có file local -->
+                <div class="absolute inset-0">
+                    <img src="${data.bgImage}" onerror="this.src='${data.fallbackBg}'" class="w-full h-full object-cover" alt="Hero Background">
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-r from-black via-black/60 to-transparent"></div>
+
+                <!-- Content -->
+                <div class="container mx-auto px-6 relative z-10 pt-20">
+                    <div class="flex items-center gap-2 mb-4 opacity-80">
+                         <!-- Updated Hero Logo -->
+                         <img src="images/logo-vtv.png" alt="VTV" class="h-8 w-auto bg-white/90 rounded px-2 py-1">
+                    </div>
+                    
+                    <h1 class="text-4xl md:text-6xl font-bold leading-tight max-w-2xl mb-4 whitespace-pre-line">
+                        ${data.title}
+                    </h1>
+                    
+                    <p class="text-gray-300 text-lg md:text-xl max-w-xl mb-8">
+                        ${data.subtitle}
+                    </p>
+
+                    <div class="flex flex-wrap gap-4">
+                        <button onclick="navigateToDetail('${data.id}')" class="bg-white text-black px-8 py-3 rounded font-bold hover:bg-gray-200 transition flex items-center gap-2">
+                            View programmes
+                        </button>
+                        <button class="bg-vtv-red text-white px-8 py-3 rounded font-bold hover:bg-red-700 transition flex items-center gap-2">
+                            <i data-lucide="play-circle" class="w-5 h-5"></i> Watch trailer
+                        </button>
+                    </div>
+
+                    <!-- Grunge Text Effect -->
+                    <!-- <div class="absolute top-1/4 right-10 md:right-32 text-white/20 md:text-white/40 font-grunge text-6xl md:text-8xl transform -rotate-12 pointer-events-none select-none">
+                        ${data.decorativeText}
+                    </div> -->
+                </div>
+            </section>
+        `;
+
+        const IntroSection = (items) => {
+            return items.map(item => `
+                <section class="py-20 bg-vtv-black border-b border-white/10">
+                    <div class="container mx-auto px-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                            <!-- Logic to swap order based on layout -->
+                            ${item.layout === 'left-image' ? `
+                                <div class="relative group transform -rotate-2 hover:rotate-0 transition duration-500">
+                                    <div class="absolute inset-0 bg-vtv-red/20 rounded-lg transform translate-x-2 translate-y-2 -z-10"></div>
+                                    <img src="${item.image}" onerror="this.src='${item.fallbackImage}'" class="w-full h-[400px] object-cover rounded-lg shadow-2xl border border-white/10">
+                                </div>
+                                <div>
+                                    <h2 class="text-3xl font-bold mb-4">${item.title}</h2>
+                                    <p class="text-gray-400 mb-6 leading-relaxed">${item.desc}</p>
+                                    <button class="bg-vtv-red px-6 py-2 rounded text-white font-medium hover:bg-red-700 transition flex items-center gap-2">
+                                        Learn more <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            ` : `
+                                <div class="order-2 md:order-1">
+                                    <h2 class="text-3xl font-bold mb-4 text-vtv-red">Our Programmes</h2>
+                                    <h3 class="text-2xl font-bold mb-4 text-white">${item.title}</h3>
+                                    <p class="text-gray-400 mb-6 leading-relaxed">${item.desc}</p>
+                                    <button class="bg-vtv-red px-6 py-2 rounded text-white font-medium hover:bg-red-700 transition flex items-center gap-2">
+                                        Learn more <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                                <div class="order-1 md:order-2 relative group transform rotate-2 hover:rotate-0 transition duration-500">
+                                    <div class="absolute inset-0 bg-white/10 rounded-lg transform -translate-x-2 translate-y-2 -z-10"></div>
+                                    <img src="${item.image}" onerror="this.src='${item.fallbackImage}'" class="w-full h-[400px] object-cover rounded-lg shadow-2xl border border-white/10">
+                                </div>
+                            `}
+                        </div>
+                    </div>
+                </section>
+            `).join('');
+        };
+		
+             const VideoHighlight = () => `
+            <section class="bg-black py-20 flex justify-center">
+              <div class="container mx-auto px-6">
+                    <!-- <h2 class="text-3xl font-bold text-center text-white mb-10">Video Highlight - Nổi Bật</h2> --> -->
+                    <div class="max-w-4xl mx-auto shadow-2xl rounded-xl overflow-hidden border-4 border-vtv-red/70">
+                        <!-- Nhúng video YouTube mới -->
+                        <!-- Video: The Most Beautiful Flower OST - Lời Tự Sự | VTV3 -->
+                        <div class="relative" style="padding-top: 56.25%;">
+                            <iframe 
+                                class="absolute top-0 left-0 w-full h-full" 
+                                src="https://www.youtube.com/embed/SUy9TrFNE5E?rel=0" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        `;
+
+        const CategorySection = (cats) => {
+            return cats.map(cat => `
+                <section class="py-12 border-b border-white/5 bg-[#121212]">
+                    <div class="container mx-auto px-4 md:px-0">
+                        <div class="flex flex-col md:flex-row gap-8">
+                            <!-- Sticky Info Column -->
+                            <div class="md:w-1/4 md:pl-6 md:sticky md:left-0">
+                                <h3 class="text-3xl font-bold mb-2">
+                                    <span class="${cat.color}">${cat.name}</span> <br/>
+                                    <!-- <span class="text-white">${cat.suffix}</span> -->
+                                </h3>
+                                <p class="text-gray-400 text-sm mb-4 line-clamp-3">
+                                    ${cat.description}
+                                </p>
+                               <!--  <a href="#" class="text-sm underline text-gray-300 hover:text-white">Learn more</a> -->
+                            </div>
+
+                            <!-- Horizontal Scrollable Cards -->
+                            <div class="md:w-3/4 overflow-x-auto scrollbar pb-4">
+                                <div class="flex gap-4" style="width: max-content;">
+                                    ${cat.items.map(item => `
+                                        <div class="w-64 md:w-80 group cursor-pointer" onclick="navigateToDetail('${item.id}')">
+                                            <div class="relative aspect-video rounded-lg overflow-hidden bg-gray-800 mb-3">
+                                                <img src="${item.img}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                                                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                                                    <span class="text-white text-xs font-bold border border-white px-3 py-1 rounded-full">VIEW</span>
+                                                </div>
+                                            </div>
+                                            <div class="flex justify-between items-start">
+                                                <h4 class="font-bold text-lg group-hover:text-vtv-red transition">${item.title}</h4>
+                                                <!-- <button class="bg-white/10 p-1 rounded-full hover:bg-white/20">
+                                                    <i data-lucide="plus" class="w-4 h-4"></i>
+                                                </button> -->
+                                            </div>
+                                            <!-- <span class="text-xs text-gray-500 uppercase tracking-wider">Learn more</span> -->
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            `).join('');
+        };
+
+		
+        const FeaturedSection = (data) => `
+            <section class="py-20 bg-gradient-to-b from-black to-[#1a1a1a]">
+                <div class="container mx-auto px-6 mb-10 flex flex-col md:flex-row justify-between items-end gap-6">
+                    <div class="max-w-3xl">
+                        <span class="text-vtv-red font-bold uppercase tracking-wider text-sm mb-2 block">Our Programmes</span>
+                        <h2 class="text-3xl md:text-5xl font-bold leading-tight">${data.title}</h2>
+                    </div>
+                    <button class="bg-vtv-red px-8 py-3 rounded text-white font-bold hover:bg-red-700 transition whitespace-nowrap">
+                        Watch Trailer
+                    </button>
+                </div> 
+
+                <!-- Simple Grid for Featured (simulating slider) -->
+                <div class="container mx-auto px-6">
+                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        ${data.items.map(item => `
+                            <div class="aspect-[2/3] bg-gray-800 rounded-lg overflow-hidden relative group cursor-pointer" onclick="navigateToDetail('${item.id}')">
+                                <img src="${item.img}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent flex flex-col justify-end p-4">
+                                    <h4 class="text-xl font-bold translate-y-2 group-hover:translate-y-0 transition">${item.title}</h4>
+                                    <p class="text-xs text-gray-300 opacity-0 group-hover:opacity-100 transition delay-75">Click to view details</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                     </div>
+                     
+                     <div class="flex gap-4 mt-8 justify-center md:justify-start">
+                        <button class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition">
+                            <i data-lucide="chevron-left" class="w-6 h-6"></i>
+                        </button>
+                        <button class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition">
+                            <i data-lucide="chevron-right" class="w-6 h-6"></i>
+                        </button>
+                     </div>
+                </div>
+            </section>
+        `; 
+
+        const Footer = () => `
+            <footer class="bg-black text-white pt-16 pb-8 border-t border-white/10">
+                <div class="container mx-auto px-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
+                        <div class="bg-[#111] p-8 rounded-lg border border-white/5">
+                            <h3 class="text-2xl font-bold mb-4">Get access to full programme details and screeners</h3>
+                            <p class="text-gray-400 mb-6">Create an account to view full catalogues and request screening rights for international broadcasting.</p>
+                            <a href="#" class="text-vtv-red font-bold underline">Apply for access</a>
+                        </div>
+                        <div class="bg-[#111] p-8 rounded-lg border border-white/5 text-right">
+                             <h3 class="text-2xl font-bold mb-4">Vietnam Television Advertising and Copyrights Center</h3>
+                             <p class="text-gray-400">Acquisitions and Sales Department</p>
+                             <p class="font-bold text-lg mt-2">phanthom@tvad-vtv.vn</p>
+                             <p class="text-sm text-gray-500">Phan Thi Thom - Manager</p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col md:flex-row justify-between items-center border-t border-white/10 pt-8 gap-4">
+                         <div class="flex items-center gap-4">
+                            <!-- Updated Footer Logo -->
+                            <div class="w-12 h-12 rounded flex items-center justify-center">
+                                <img src="images/logo-vtv.png" alt="VTV" class="w-12 h-auto">
+                            </div>
+                            <div class="text-sm text-gray-400">
+                                <p>43 Nguyen Chi Thanh, Hanoi, Vietnam</p>
+                                <p>0123 456 789</p>
+                            </div>
+                         </div>
+                         
+                         <div class="flex gap-6 text-sm text-gray-400">
+                            <a href="#" class="hover:text-white">About Us</a>
+                            <a href="#" class="hover:text-white">Brand Licensing</a>
+                            <a href="#" class="hover:text-white">Brand Kit</a>
+                         </div>
+
+                         <div class="flex gap-6 text-sm text-gray-400">
+                             <a href="#" class="hover:text-white">Privacy Notice</a>
+                             <a href="#" class="hover:text-white">Terms & Conditions</a>
+                             <span>©2025 VTV - Vietnam Television</span>
+                         </div>
+                    </div>
+                </div>
+            </footer>
+        `;
+
+        // ==========================================
+        // 4. DETAIL PAGE COMPONENT
+        // ==========================================
+        const DetailPage = (item) => `
+            <div class="min-h-screen bg-[#050505] fade-in relative">
+                <!-- Back Button -->
+                <button onclick="navigateToHome()" class="fixed top-6 left-6 z-50 bg-black/50 backdrop-blur-md border border-white/20 text-white px-4 py-2 rounded-full hover:bg-white hover:text-black transition flex items-center gap-2">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Catalogue
+                </button>
+
+                <!-- Hero Header -->
+                <div class="h-[60vh] w-full relative">
+                     <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('${item.img}');"></div>
+                     <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/60 to-transparent"></div>
+                     
+                     <div class="absolute bottom-0 left-0 p-8 md:p-16 w-full">
+                        <div class="container mx-auto">
+                            <span class="bg-vtv-red text-white text-xs font-bold px-2 py-1 rounded mb-4 inline-block">${item.category || 'Programme'}</span>
+                            <h1 class="text-4xl md:text-7xl font-bold mb-4 text-white">${item.title}</h1>
+                            <!-- <div class="flex gap-4 text-sm text-gray-300 mb-6">
+                                <span>2024</span>
+                                <span>•</span>
+                                <span>${item.duration}</span>
+                                <span>•</span>
+                                <span>Full HD</span>
+                            </div> -->
+                           <!--  <div class="flex gap-4">
+                                <button class="bg-white text-black px-8 py-3 rounded font-bold hover:bg-gray-200 transition">Play Episode 1</button>
+                                <button class="border border-white/30 text-white px-6 py-3 rounded font-bold hover:bg-white/10 transition">+ Add to List</button>
+                            </div> -->
+                        </div>
+                     </div>
+                </div>
+
+                <!-- Info Content -->
+                <div class="container mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-12">
+                    <div class="md:col-span-2">
+                        <h3 class="text-2xl font-bold mb-4">Description</h3>
+                        <p class="text-gray-300 text-lg leading-relaxed mb-8">
+                            ${item.desc}
+                        </p>
+
+                        <!-- <h3 class="text-xl font-bold mb-4">Episodes</h3>
+                        <div class="space-y-4">
+                            <!-- Mock Episode List -->
+                           <!--  <div class="flex gap-4 items-center bg-[#111] p-4 rounded hover:bg-[#1a1a1a] cursor-pointer transition">
+                                <div class="w-16 h-16 bg-gray-800 rounded flex items-center justify-center text-gray-500">1</div>
+                                <div>
+                                    <h4 class="font-bold">The Beginning</h4>
+                                    <p class="text-sm text-gray-400">45m</p>
+                                </div>
+                                <i data-lucide="play" class="ml-auto w-5 h-5 text-gray-400"></i>
+                            </div>
+                             <div class="flex gap-4 items-center bg-[#111] p-4 rounded hover:bg-[#1a1a1a] cursor-pointer transition">
+                                <div class="w-16 h-16 bg-gray-800 rounded flex items-center justify-center text-gray-500">2</div>
+                                <div>
+                                    <h4 class="font-bold">The Journey Continues</h4>
+                                    <p class="text-sm text-gray-400">48m</p>
+                                </div>
+                                <i data-lucide="play" class="ml-auto w-5 h-5 text-gray-400"></i>
+                            </div>
+                        </div> -->
+                    </div>
+
+                    <div class="md:col-span-1">
+                        <div class="bg-[#111] p-6 rounded-lg border border-white/5">
+                            <h3 class="text-lg font-bold mb-4 text-gray-200">Details</h3>
+                            <ul class="space-y-4 text-sm">
+                                <li class="flex justify-between border-b border-white/10 pb-2">
+                                    <span class="text-gray-500">Genre</span>
+                                    <span>${item.category || 'General'}</span>
+                                </li>
+                                <li class="flex justify-between border-b border-white/10 pb-2">
+                                    <span class="text-gray-500">Language</span>
+                                    <span>Vietnamese, English Sub</span>
+                                </li>
+                                <li class="flex justify-between border-b border-white/10 pb-2">
+                                    <span class="text-gray-500">Episodes</span>
+                                    <span>${item.episode}</span>
+                                </li>
+                                <li class="flex justify-between border-b border-white/10 pb-2">
+                                    <span class="text-gray-500">Duration (minutes)</span>
+                                    <span>${item.duration}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            ${Footer()} <!-- Reuse Footer -->
+        `;
+
+        // ==========================================
+        // 5. MAIN LOGIC & RENDERING
+        // ==========================================
+
+        const app = document.getElementById('app');
+
+        function renderHome() {
+            window.scrollTo(0, 0);
+            app.innerHTML = `
+                ${Header()}
+                <main>
+                    ${Hero(db.hero)}
+                    ${IntroSection(db.introBlocks)}
+                    ${VideoHighlight()}
+                    ${CategorySection(db.categories)}
+                    ${FeaturedSection(db.featured)}
+                </main>
+                ${Footer()}
+            `;
+            refreshIcons();
+        }
+
+        function renderDetail(id) {
+            window.scrollTo(0, 0);
+            const item = getItemById(id);
+            app.innerHTML = DetailPage(item);
+            refreshIcons();
+        }
+
+        // --- Global Navigation Functions ---
+        window.navigateToHome = () => {
+            renderHome();
+        };
+
+        window.navigateToDetail = (id) => {
+            renderDetail(id);
+        };
+
+        // --- Initial Init ---
+        renderHome();
+
+    </script>
+</body>
+</html>

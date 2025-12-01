@@ -5,15 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VTV - Vietnam's Leading Television Catalogue</title>
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Rock+Salt&display=swap" rel="stylesheet">
     
-    <!-- Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <script>
@@ -51,7 +48,7 @@
             animation: fadeIn 0.5s ease-in-out;
         }
 		
-		 /* Slide transition effect - NEW CSS */
+		 /* Slide transition effect */
         .slide-image {
             transition: opacity 1s ease-in-out;
         }
@@ -60,14 +57,40 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
+
+        /* NEW CSS for Category Slider */
+        .category-slider-container {
+            position: relative;
+        }
+        
+        .category-slide-wrapper {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+		
+        /* Định nghĩa chiều rộng item: Hiển thị 3 item trên desktop, 1 item trên mobile */
+        .slider-item-width {
+            flex: 0 0 33.3333%; /* Approx. 3 items visible on desktop (100%/3) */
+            max-width: 33.3333%;
+            padding-left: 0.5rem; /* Thêm padding ngang cho item */
+            padding-right: 0.5rem;
+        }
+
+        /* Thay đổi kích thước cho màn hình nhỏ hơn */
+        @media (max-width: 768px) {
+            .slider-item-width {
+                flex: 0 0 100%; /* Hiển thị 1 mục cùng lúc trên mobile */
+                max-width: 100%;
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+            }
+        }
     </style>
 </head>
 <body class="bg-vtv-black text-white font-sans antialiased overflow-x-hidden">
 
-    <!-- Container chính để render nội dung (Home hoặc Detail) -->
     <div id="app"></div>
 
-    <!-- MAIN SCRIPT -->
     <script>
         // ==========================================
         // 1. DATA (JSON CONFIGURATION)
@@ -150,7 +173,7 @@
                     items: [
                         { id: "dr1", title: "Milkwood Blossoms in the Wind", desc: "Milkwood Blossoms in the Wind is a gentle and heartfelt drama about family bonds in a three-generation household. The story follows Mrs Truc, a widowed former personnel officer who is intelligent and strong-willed, yet sometimes overbearing. Her two grown children, Hieu and Thuan, each face their own struggles in marriage, parenting, and unspoken family expectations. Different viewpoints create distance, and small misunderstandings turn into emotional challenges for everyone. The series follows each character as they learn to love with more understanding, let go of rigid expectations, and rebuild connection. Warm, simple, and deeply human, “Milkwood Blossoms in the Wind” celebrates the quiet strength of family love and the tenderness that keeps people close.", episode: 56, duration: 30, img: "images/drama/hoasuatronggio.jpg" },
                         { id: "dr2", title: "The Black Remedy", desc: "Twenty years after a brutal crime claimed his mother’s life, Tuan, a brilliant and courageous young police officer, returns to the criminal investigation unit led by Captain Tuyen, the very man who witnessed the tragedy. From his first days on the job, a mysterious case unfolds: the sudden death of Trinh Quong Vuong, the infamous leader of the Cityboy party crew. Lurking behind tangled clues and cunning suspects is a never-before-seen substance - \"the black remedy\" - opening the door to a chilling conspiracy.Each solved case reveals another layer of darkness, where people sacrifice morality, family, and even life itself for power and desire.", episode: 27, duration: 45, img: "images/drama/bietduocden.jpg" },
-                        { id: "dr3", title: "Across Time", desc: "\"Across Time\" is a journey woven between two eras - war and peace - portraying the heroic yet deeply human spirit of the Vietnamese soldier, the \"Soldiers of Uncle Ho\" In a timeline of the past, the series brings viewers back to Field Hospital T1 during the fiercest years of the war against the US. There we meet Dr Le Van Nam, steadfast and selfless; nurse Hoang Thi Hoi, gentle yet resilient; and wounded soldier Tran Manh Cuong, courageous even on the brink of life and death. Amid chaos, they hold onto faith, love, and ideals. Parallel to this is the present-day story of Lieutenant Colonel Le Nguyen Dai - a modern-day soldier facing natural disasters, pandemics, and hidden threats.Two timelines intertwine, reflect, and continue one another, creating a sweeping portrait of the Vietnamese soldier - fearless in wartime, steadfast in peace. \"Across Time\" is a moving symphony of patriotism and the quiet heroism of ordinary people who live and serve for the people.", episode: 60, duration: 30, img: "images/drama/kothoigian.jpg" },
+                        { id: "dr3", title: "Across Time", desc: "\"Across Time\" is a journey woven between two eras - war and peace - portraying the heroic yet deeply human spirit of the Vietnamese soldier, the \"Soldiers of Uncle Ho\" In a timeline of the past, the series brings viewers back to Field Hospital T1 during the fiercest years of the war against the US. There we meet Dr Le Van Nam, steadfast and selfless; nurse Hoang Thi Hoi, gentle yet resilient; and wounded soldier Tran Manh Cuong, courageous even on the brink of life and death. In the midst of chaos, they hold onto faith, love, and ideals. Parallel to this is the present-day story of Lieutenant Colonel Le Nguyen Dai - a modern-day soldier facing natural disasters, pandemics, and hidden threats.Two timelines intertwine, reflect, and continue one another, creating a sweeping portrait of the Vietnamese soldier - fearless in wartime, steadfast in peace. \"Across Time\" is a moving symphony of patriotism and the quiet heroism of ordinary people who live and serve for the people.", episode: 60, duration: 30, img: "images/drama/kothoigian.jpg" },
 						{ id: "dr4", title: "Life Is Still Beautiful", desc: "Set in the damp alleyways and bustling calls of a wholesale market, “Life Is Still Beautiful” paints an honest and deeply touching portrait of ordinary yet resilient lives. The series introduces two characters: Luyen, a hardworking woman whose wounded heart remains unbroken, and Luu, an eccentric porter, rough around the edges but loyal and kind. Amid their struggles and within the humble boarding house community, quiet gestures of humanity weave people together through every hardship. It is not only about survival - it is a hymn to hope, kindness, and the longing for happiness. \"Life Is Still Beautiful\" gently reminds us that even in the darkest moments, human compassion is the most beautiful light.", episode: 46, duration: 45, img: "images/drama/cuocdoi.jpg" },
 						{ id: "dr5", title: "Suddenly, Our Family Is Happy", desc: "This series offers a fresh, modern, and heartfelt look at family relationships in contemporary Vietnamese life. Centred on the household of Mr Toai and Mrs Cuc, where all three sons live under the same roof with their wives and children, the story follows constant clashes, misunderstandings, and unexpected secrets.Yet whenever conflicts threaten to pull them apart, love and forgiveness become the invisible threads that draw them back together.Without exaggeration or melodrama, the series uses gentle humour and everyday stories to portray how each family member learns to love, understand, and grow. \"Our Family Is Suddenly Happy\" makes us laugh, tear up, and realise that happiness often arrives in the most unexpected ways.", episode: 56, duration: 45, img: "images/drama/giadinh.jpg" },
                     ]
@@ -210,8 +233,12 @@
          // 2. STATE & HELPER FUNCTIONS - CHANGED
         // ==========================================
         
-        let currentSlide = 0; // State cho slide hiện tại
-        let slideInterval; // Biến cho interval tự động chuyển slide
+        let currentSlide = 0; // State cho slide hiện tại (Hero)
+        let slideInterval; // Biến cho interval tự động chuyển slide (Hero)
+
+        // NEW STATE & HELPER FOR CATEGORY SLIDER
+        // Dùng object để lưu trữ trạng thái slide cho mỗi danh mục
+        const categorySliderState = {}; 
 
         // Render Icons (call after DOM updates)
         function refreshIcons() {
@@ -239,83 +266,7 @@
             };
         }
 
-        // ==========================================
-        // 3. COMPONENTS (HTML String Generators)
-        // ==========================================
-
-        const Header = () => `
-            <header class="fixed top-0 w-full z-50 bg-gradient-to-r from-vtv-red to-red-800 shadow-lg">
-                <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-                    <button class="text-white hover:bg-white/20 p-2 rounded-full transition">
-                        <i data-lucide="menu" class="w-6 h-6"></i>
-                    </button>
-                    
-                    <div class="flex items-center gap-2 cursor-pointer" onclick="navigateToHome()">
-                        <!-- Updated VTV Logo -->
-                        <div class="h-10 rounded flex items-center justify-center px-2 shadow-sm">
-                             <img src="images/logo-vtv.png" alt="VTV" class="h-10 w-auto">
-                        </div>
-                    </div>
-
-                    <div class="flex gap-4 text-white">
-                        <a href="https://www.facebook.com/TVAd01" target ="_blank" rel="noopener noreferrer" class="hover:text-gray-200 transition"><i data-lucide="facebook" class="w-5 h-5"></i> </a>
-                        <a href="https://www.youtube.com/channel/UCbZRzbCp0yELYpCUlc0hP7w" target="_blank" rel="noopener noreferrer" class="hover:text-gray-200 transition">
-                            <i data-lucide="youtube" class="w-5 h-5"></i>
-                        </a>
-                        <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" class="hover:text-gray-200 transition">
-                            <i data-lucide="instagram" class="w-5 h-5"></i>
-                        </a>
-                    </div>
-                </div>
-            </header>
-        `;
-
-        const Hero = (data) => `
-            <section class="relative h-screen w-full overflow-hidden flex items-center">
-                <!-- Slider Container - CHANGED -->
-                <div id="hero-slider" class="absolute inset-0">
-                    ${data.slides.map((slide, index) => `
-                        <div class="absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === 0 ? 'opacity-100' : 'opacity-0'} slide-item" data-index="${index}">
-                            <img src="${slide.img}" onerror="this.src='${slide.fallback}'" class="w-full h-full object-cover" alt="Hero Background">
-                            <div class="absolute inset-0 bg-gradient-to-r from-black via-black/60 to-transparent"></div>
-                        </div>
-                    `).join('')}
-                </div>
-
-                <!-- Content -->
-                <div class="container mx-auto px-6 relative z-10 pt-20">
-                    <div class="flex items-center gap-2 mb-4 opacity-80">
-                         <!-- Updated Hero Logo -->
-                         <img src="images/logo-vtv.png" alt="VTV" class="h-8 w-auto bg-white/90 rounded px-2 py-1">
-                    </div>
-                    
-                    <h1 class="text-4xl md:text-6xl font-bold leading-tight max-w-2xl mb-4 whitespace-pre-line">
-                        ${data.title}
-                    </h1>
-                    
-                    <p class="text-gray-300 text-lg md:text-xl max-w-xl mb-8">
-                        ${data.subtitle}
-                    </p>
-
-                    <div class="flex flex-wrap gap-4 mb-8">
-                        <button onclick="navigateToDetail('${data.id}')" class="bg-white text-black px-8 py-3 rounded font-bold hover:bg-gray-200 transition flex items-center gap-2">
-                            View programmes
-                        </button>
-                        <button onclick="scrollToVideoHighlight()" class="bg-vtv-red text-white px-8 py-3 rounded font-bold hover:bg-red-700 transition flex items-center gap-2">
-                            <i data-lucide="play-circle" class="w-5 h-5"></i> Watch trailer
-                        </button>
-                    </div>
-
-                    <!-- Slider Dots - NEW -->
-                    <div class="flex gap-3">
-                        ${data.slides.map((_, index) => `
-                            <button onclick="goToSlide(${index})" class="w-3 h-3 rounded-full transition-all duration-300 ${index === 0 ? 'bg-vtv-red scale-125' : 'bg-white/50 hover:bg-white'} dot-indicator" data-index="${index}"></button>
-                        `).join('')}
-                    </div>
-                </div>
-            </section>
-        `;
-		
+        // SLIDER LOGIC FOR HERO (EXISTING)
 		 // Slider Logic Functions - NEW FUNCTIONS
         window.startSlider = () => {
             if (slideInterval) clearInterval(slideInterval);
@@ -370,12 +321,155 @@
             }
         };
 
+        // SLIDER LOGIC FOR CATEGORIES (NEW)
+        // Hàm khởi tạo/cập nhật slider cho một danh mục
+        window.initCategorySlider = (catId, numItems) => {
+            if (numItems <= 0) return;
+            if (!categorySliderState[catId]) {
+                categorySliderState[catId] = {
+                    currentIndex: 0,
+                    numItems: numItems,
+                };
+            }
+            updateCategorySliderView(catId);
+        };
+
+        // Hàm chuyển slide (chuyển 1 item mỗi lần)
+        window.moveCategorySlide = (catId, direction) => {
+            const state = categorySliderState[catId];
+            if (!state) return;
+
+            let newIndex = state.currentIndex + direction;
+            
+            const maxIndex = state.numItems - 1; 
+
+            if (newIndex < 0) {
+                newIndex = maxIndex; // Quay vòng lại slide cuối (Optional, có thể để newIndex = 0 để dừng)
+            } else if (newIndex > maxIndex) {
+                newIndex = 0; // Quay vòng lại slide đầu (Optional, có thể để newIndex = maxIndex để dừng)
+            }
+
+            state.currentIndex = newIndex;
+            updateCategorySliderView(catId);
+        };
+
+        // Hàm cập nhật hiển thị (Visual Update)
+        function updateCategorySliderView(catId) {
+            const state = categorySliderState[catId];
+            const wrapper = document.getElementById(`slider-wrapper-${catId}`);
+            const dotsContainer = document.getElementById(`slider-dots-${catId}`);
+            
+            if (!wrapper || !state) return;
+
+            // Xác định tỉ lệ dịch chuyển dựa trên kích thước màn hình
+            // Logic này sẽ hơi phức tạp nếu muốn chuyển chính xác 3 item/lần trên desktop, 
+            // hiện tại ta chuyển 1 item/lần (dịch chuyển 100% của slider-item-width)
+            let itemMovePercentage = 33.3333; // Desktop: 3 items visible, so move by 1/3 (33.3333%)
+            
+            // Cần tinh chỉnh logic này để đảm bảo chuyển đúng số lượng item hiển thị
+            // Để đơn giản, ta sẽ dịch chuyển theo 1 item duy nhất:
+            if (window.innerWidth < 768) {
+                 itemMovePercentage = 100; // Mobile: 1 item visible, move by 100%
+            }
+
+            // Tỉ lệ dịch chuyển tổng: - currentIndex * (chiều rộng 1 item)
+            // Vì CSS đã đặt item-width = 33.3333%, nên ta sẽ dịch chuyển theo % của 33.3333%
+            const translateValue = -state.currentIndex * itemMovePercentage;
+            wrapper.style.transform = `translateX(${translateValue}%)`;
+            
+            // Update Dots
+            if (dotsContainer) {
+                const dots = dotsContainer.querySelectorAll('.cat-dot-indicator');
+                dots.forEach((dot, index) => {
+                    if (index === state.currentIndex) {
+                        dot.classList.remove('bg-white/50', 'hover:bg-white');
+                        dot.classList.add('bg-vtv-red', 'scale-125');
+                    } else {
+                        dot.classList.remove('bg-vtv-red', 'scale-125');
+                        dot.classList.add('bg-white/50', 'hover:bg-white');
+                    }
+                });
+            }
+        }
+
+
+        // ==========================================
+        // 3. COMPONENTS (HTML String Generators)
+        // ==========================================
+
+        const Header = () => `
+            <header class="fixed top-0 w-full z-50 bg-gradient-to-r from-vtv-red to-red-800 shadow-lg">
+                <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                    <button class="text-white hover:bg-white/20 p-2 rounded-full transition">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                    
+                    <div class="flex items-center gap-2 cursor-pointer" onclick="navigateToHome()">
+                        <div class="h-10 rounded flex items-center justify-center px-2 shadow-sm">
+                             <img src="images/logo-vtv.png" alt="VTV" class="h-10 w-auto">
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4 text-white">
+                        <a href="https://www.facebook.com/TVAd01" target ="_blank" rel="noopener noreferrer" class="hover:text-gray-200 transition"><i data-lucide="facebook" class="w-5 h-5"></i> </a>
+                        <a href="https://www.youtube.com/channel/UCbZRzbCp0yELYpCUlc0hP7w" target="_blank" rel="noopener noreferrer" class="hover:text-gray-200 transition">
+                            <i data-lucide="youtube" class="w-5 h-5"></i>
+                        </a>
+                        <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" class="hover:text-gray-200 transition">
+                            <i data-lucide="instagram" class="w-5 h-5"></i>
+                        </a>
+                    </div>
+                </div>
+            </header>
+        `;
+
+        const Hero = (data) => `
+            <section class="relative h-screen w-full overflow-hidden flex items-center">
+                <div id="hero-slider" class="absolute inset-0">
+                    ${data.slides.map((slide, index) => `
+                        <div class="absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === 0 ? 'opacity-100' : 'opacity-0'} slide-item" data-index="${index}">
+                            <img src="${slide.img}" onerror="this.src='${slide.fallback}'" class="w-full h-full object-cover" alt="Hero Background">
+                            <div class="absolute inset-0 bg-gradient-to-r from-black via-black/60 to-transparent"></div>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="container mx-auto px-6 relative z-10 pt-20">
+                    <div class="flex items-center gap-2 mb-4 opacity-80">
+                         <img src="images/logo-vtv.png" alt="VTV" class="h-8 w-auto bg-white/90 rounded px-2 py-1">
+                    </div>
+                    
+                    <h1 class="text-4xl md:text-6xl font-bold leading-tight max-w-2xl mb-4 whitespace-pre-line">
+                        ${data.title}
+                    </h1>
+                    
+                    <p class="text-gray-300 text-lg md:text-xl max-w-xl mb-8">
+                        ${data.subtitle}
+                    </p>
+
+                    <div class="flex flex-wrap gap-4 mb-8">
+                        <button onclick="navigateToDetail('${data.id}')" class="bg-white text-black px-8 py-3 rounded font-bold hover:bg-gray-200 transition flex items-center gap-2">
+                            View programmes
+                        </button>
+                        <button onclick="scrollToVideoHighlight()" class="bg-vtv-red text-white px-8 py-3 rounded font-bold hover:bg-red-700 transition flex items-center gap-2">
+                            <i data-lucide="play-circle" class="w-5 h-5"></i> Watch trailer
+                        </button>
+                    </div>
+
+                    <div class="flex gap-3">
+                        ${data.slides.map((_, index) => `
+                            <button onclick="goToSlide(${index})" class="w-3 h-3 rounded-full transition-all duration-300 ${index === 0 ? 'bg-vtv-red scale-125' : 'bg-white/50 hover:bg-white'} dot-indicator" data-index="${index}"></button>
+                        `).join('')}
+                    </div>
+                </div>
+            </section>
+        `;
+		
         const IntroSection = (items) => {
             return items.map(item => `
                 <section class="py-20 bg-vtv-black border-b border-white/10">
                     <div class="container mx-auto px-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                            <!-- Logic to swap order based on layout -->
                             ${item.layout === 'left-image' ? `
                                 <div class="relative group transform -rotate-0 hover:rotate-0 transition duration-500">
                                     <div class="absolute inset-0 bg-vtv-red/20 rounded-lg transform translate-x-2 translate-y-2 -z-10"></div>
@@ -390,7 +484,6 @@
                                 </div>
                             ` : `
                                 <div class="order-2 md:order-1">
-                                    <!-- <h2 class="text-3xl font-bold mb-4 text-vtv-red">Our Programmes</h2>  -->
                                     <h3 class="text-2xl font-bold mb-4 text-white">${item.title}</h3>
                                     <p class="text-gray-400 mb-6 leading-relaxed">${item.desc}</p>
                                     <button class="bg-vtv-red px-6 py-2 rounded text-white font-medium hover:bg-red-700 transition flex items-center gap-2">
@@ -411,10 +504,8 @@
              const VideoHighlight = () => `
             <section id="video-highlight" class="bg-black py-20 flex justify-center">
               <div class="container mx-auto px-6">
-                    <!-- <h2 class="text-3xl font-bold text-center text-white mb-10">Video Highlight - Nổi Bật</h2> --> -->
+                    -->
                     <div class="max-w-4xl mx-auto shadow-2xl rounded-xl overflow-hidden border-4 border-vtv-red/70">
-                        <!-- Nhúng video YouTube mới -->
-                        <!-- Video: The Most Beautiful Flower OST - Lời Tự Sự | VTV3 -->
                         <div class="relative" style="padding-top: 56.25%;">
                             <iframe 
                                 class="absolute top-0 left-0 w-full h-full" 
@@ -430,27 +521,25 @@
         `;
 
         const CategorySection = (cats) => {
+            // Sau khi map, ta sẽ gọi initCategorySlider(cat.id, cat.items.length)
+            // để khởi tạo slider cho từng danh mục
             return cats.map(cat => `
                 <section class="py-12 border-b border-white/5 bg-[#121212]">
                     <div class="container mx-auto px-4 md:px-0">
                         <div class="flex flex-col md:flex-row gap-8">
-                            <!-- Sticky Info Column -->
                             <div class="md:w-1/4 md:pl-6 md:sticky md:left-0">
                                 <h3 class="text-3xl font-bold mb-2">
                                     <span class="${cat.color}">${cat.name}</span> <br/>
-                                    <!-- <span class="text-white">${cat.suffix}</span> -->
                                 </h3>
                                 <p class="text-gray-400 text-sm mb-4 line-clamp-3">
                                     ${cat.description}
                                 </p>
-                               <!--  <a href="#" class="text-sm underline text-gray-300 hover:text-white">Learn more</a> -->
                             </div>
 
-                            <!-- Horizontal Scrollable Cards -->
-                            <div class="md:w-3/4 overflow-x-auto no-scrollbar pb-4">
-                                <div class="flex gap-4" style="width: max-content;">
+                            <div class="md:w-3/4 relative category-slider-container overflow-hidden pb-10">
+                                <div id="slider-wrapper-${cat.id}" class="category-slide-wrapper">
                                     ${cat.items.map(item => `
-                                        <div class="w-62 md:w-80 group cursor-pointer" onclick="navigateToDetail('${item.id}')">
+                                        <div class="group cursor-pointer slider-item-width" onclick="navigateToDetail('${item.id}')">
                                             <div class="relative aspect-video rounded-lg overflow-hidden bg-gray-800 mb-3">
                                                 <img src="${item.img}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
                                                 <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
@@ -460,13 +549,29 @@
                                             <div class="flex justify-between items-start">
                                                 <h4 class="font-bold text-lg group-hover:text-vtv-red transition">${item.title}</h4>
                                             </div>
-                                            
                                         </div>
                                     `).join('')}
                                 </div>
+								
+								<button onclick="moveCategorySlide('${cat.id}', -1)" class="absolute top-1/3 left-0 transform -translate-y-1/2 bg-black/70 p-2 rounded-full text-white hover:bg-black/90 transition z-20 hidden md:block shadow-lg">
+									<i data-lucide="chevron-left" class="w-6 h-6"></i>
+								</button>
+								<button onclick="moveCategorySlide('${cat.id}', 1)" class="absolute top-1/3 right-0 transform -translate-y-1/2 bg-black/70 p-2 rounded-full text-white hover:bg-black/90 transition z-20 hidden md:block shadow-lg">
+									<i data-lucide="chevron-right" class="w-6 h-6"></i>
+								</button>
+								
+								<div id="slider-dots-${cat.id}" class="flex gap-2 justify-center absolute bottom-0 left-0 right-0">
+                                    ${cat.items.map((_, index) => `
+                                        <button onclick="categorySliderState['${cat.id}'].currentIndex = ${index}; updateCategorySliderView('${cat.id}')" class="w-2 h-2 rounded-full transition-all duration-300 ${index === 0 ? 'bg-vtv-red scale-125' : 'bg-white/50 hover:bg-white'} cat-dot-indicator" data-index="${index}"></button>
+                                    `).join('')}
+                                </div>
+								
                             </div>
                         </div>
                     </div>
+                    <script>
+                        window.initCategorySlider('${cat.id}', ${cat.items.length});
+                    </script>
                 </section>
             `).join('');
         };
@@ -479,15 +584,12 @@
                             <p class="text-gray-400 mb-6">Create an account to view full catalogues and request screening rights for international broadcasting.</p>
                             <a href="#" class="text-vtv-red font-bold underline">Apply for access</a>
                         </div>
-						 <!-- Cập nhật phần này: Chèn logo TVAd -->
-                        <div class="bg-[#111] p-8 rounded-lg border border-white/5">
+						 <div class="bg-[#111] p-8 rounded-lg border border-white/5">
                              <div class="flex flex-col md:flex-row justify-between items-start">
-                                 <!-- Logo TVAd bên trái -->
                                  <div class="mb-4 md:mb-0">
                                      <img src="images/logo-tvad.png" alt="TVAd Logo" class="h-16 w-auto object-contain bg-white/10 rounded p-1">
                                  </div>
                                  
-                                 <!-- Nội dung bên phải -->
                                  <div class="text-right flex-1 md:pl-6">
                                      <h3 class="text-xl font-bold mb-4">Vietnam Television Advertising and Copyrights Center</h3>
                                      <p class="text-gray-400">Acquisitions and Sales Department</p>
@@ -498,17 +600,8 @@
                         </div>
                     </div> 
 						 
-                      <!--   <div class="bg-[#111] p-8 rounded-lg border border-white/5 text-right">
-                             <h3 class="text-2xl font-bold mb-4">Vietnam Television Advertising and Copyrights Center</h3>
-                             <p class="text-gray-400">Acquisitions and Sales Department</p>
-                             <p class="font-bold text-lg mt-2">phanthom@tvad-vtv.vn</p>
-                             <p class="text-sm text-gray-500">Phan Thi Thom - Manager</p>
-                        </div>
-                    </div> -->
-
-                    <div class="flex flex-col md:flex-row justify-between items-center border-t border-white/10 pt-8 gap-4">
+                      <div class="flex flex-col md:flex-row justify-between items-center border-t border-white/10 pt-8 gap-4">
                          <div class="flex items-center gap-4">
-                            <!-- Updated Footer Logo -->
                             <div class="w-12 h-12 rounded flex items-center justify-center">
                                 <img src="images/logo-vtv.png" alt="VTV" class="w-12 h-auto">
                             </div>
@@ -539,12 +632,10 @@
         // ==========================================
         const DetailPage = (item) => `
             <div class="min-h-screen bg-[#050505] fade-in relative">
-                <!-- Back Button -->
                 <button onclick="navigateToHome()" class="fixed top-6 left-6 z-50 bg-black/50 backdrop-blur-md border border-white/20 text-white px-4 py-2 rounded-full hover:bg-white hover:text-black transition flex items-center gap-2">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Catalogue
                 </button>
 
-                <!-- Hero Header -->
                 <div class="h-[60vh] w-full relative">
                      <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('${item.img}');"></div>
                      <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/60 to-transparent"></div>
@@ -553,22 +644,11 @@
                         <div class="container mx-auto">
                             <span class="bg-vtv-red text-white text-xs font-bold px-2 py-1 rounded mb-4 inline-block">${item.category || 'Programme'}</span>
                             <h1 class="text-4xl md:text-7xl font-bold mb-4 text-white">${item.title}</h1>
-                            <!-- <div class="flex gap-4 text-sm text-gray-300 mb-6">
-                                <span>2024</span>
-                                <span>•</span>
-                                <span>${item.duration}</span>
-                                <span>•</span>
-                                <span>Full HD</span>
-                            </div> -->
-                           <!--  <div class="flex gap-4">
-                                <button class="bg-white text-black px-8 py-3 rounded font-bold hover:bg-gray-200 transition">Play Episode 1</button>
-                                <button class="border border-white/30 text-white px-6 py-3 rounded font-bold hover:bg-white/10 transition">+ Add to List</button>
-                            </div> -->
+                           
                         </div>
                      </div>
                 </div>
 
-                <!-- Info Content -->
                 <div class="container mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-12">
                     <div class="md:col-span-2">
                         <h3 class="text-2xl font-bold mb-4">Description</h3>
@@ -576,26 +656,6 @@
                             ${item.desc}
                         </p>
 
-                        <!-- <h3 class="text-xl font-bold mb-4">Episodes</h3>
-                        <div class="space-y-4">
-                            <!-- Mock Episode List -->
-                           <!--  <div class="flex gap-4 items-center bg-[#111] p-4 rounded hover:bg-[#1a1a1a] cursor-pointer transition">
-                                <div class="w-16 h-16 bg-gray-800 rounded flex items-center justify-center text-gray-500">1</div>
-                                <div>
-                                    <h4 class="font-bold">The Beginning</h4>
-                                    <p class="text-sm text-gray-400">45m</p>
-                                </div>
-                                <i data-lucide="play" class="ml-auto w-5 h-5 text-gray-400"></i>
-                            </div>
-                             <div class="flex gap-4 items-center bg-[#111] p-4 rounded hover:bg-[#1a1a1a] cursor-pointer transition">
-                                <div class="w-16 h-16 bg-gray-800 rounded flex items-center justify-center text-gray-500">2</div>
-                                <div>
-                                    <h4 class="font-bold">The Journey Continues</h4>
-                                    <p class="text-sm text-gray-400">48m</p>
-                                </div>
-                                <i data-lucide="play" class="ml-auto w-5 h-5 text-gray-400"></i>
-                            </div>
-                        </div> -->
                     </div>
 
                     <div class="md:col-span-1">
@@ -623,8 +683,7 @@
                     </div>
                 </div>
             </div>
-            ${Footer()} <!-- Reuse Footer -->
-        `;
+            ${Footer()} `;
 
         // ==========================================
         // 5. MAIN LOGIC & RENDERING
@@ -634,7 +693,7 @@
 
         function renderHome() {
             window.scrollTo(0, 0);
-			if (slideInterval) clearInterval(slideInterval); // Clear existing interval if returning to home - NEW
+			if (slideInterval) clearInterval(slideInterval); // Clear existing interval if returning to home 
             app.innerHTML = `
                 ${Header()}
                 <main>
@@ -645,14 +704,14 @@
                 </main>
                 ${Footer()}
             `;
-              // Start the slider after rendering - NEW
+              // Start the slider after rendering
             window.startSlider(); 
             refreshIcons();
         }
 
         function renderDetail(id) {
             window.scrollTo(0, 0);
-			if (slideInterval) clearInterval(slideInterval); // Stop slider on detail page - NEW
+			if (slideInterval) clearInterval(slideInterval); // Stop slider on detail page
 			
             const item = getItemById(id);
             app.innerHTML = DetailPage(item);

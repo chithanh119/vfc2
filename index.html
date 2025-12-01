@@ -447,24 +447,41 @@
                             </div>
 
                             <!-- Horizontal Scrollable Cards -->
-                            <div class="md:w-3/4 overflow-x-auto no-scrollbar pb-4">
-                                <div class="flex gap-4" style="width: max-content;">
-                                    ${cat.items.map(item => `
-                                        <div class="w-62 md:w-80 group cursor-pointer" onclick="navigateToDetail('${item.id}')">
-                                            <div class="relative aspect-video rounded-lg overflow-hidden bg-gray-800 mb-3">
-                                                <img src="${item.img}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                                                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                                                    <span class="text-white text-xs font-bold border border-white px-3 py-1 rounded-full">VIEW</span>
-                                                </div>
-                                            </div>
-                                            <div class="flex justify-between items-start">
-                                                <h4 class="font-bold text-lg group-hover:text-vtv-red transition">${item.title}</h4>
-                                            </div>
-                                            
-                                        </div>
-                                    `).join('')}
-                                </div>
-                            </div>
+							<div class="relative md:w-3/4">
+
+								<!-- Nút trái -->
+								<button 
+									class="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-black/60 hover:bg-black text-white p-3 rounded-full backdrop-blur cursor-pointer hidden md:flex"
+									onclick="scrollCategory(this, -300)">
+									<i data-lucide="chevron-left"></i>
+								</button>
+							
+                             <div class="overflow-x-auto no-scrollbar pb-4 category-scroll">
+								<div class="flex gap-4 w-max">
+									${cat.items.map(item => `
+										<div class="w-60 md:w-80 group cursor-pointer" onclick="navigateToDetail('${item.id}')">
+											<div class="relative aspect-video rounded-lg overflow-hidden bg-gray-800 mb-3">
+												<img src="${item.img}" alt="${item.title}" 
+													class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+												<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+													<span class="text-white text-xs font-bold border border-white px-3 py-1 rounded-full">VIEW</span>
+												</div>
+											</div>
+											<h4 class="font-bold text-lg group-hover:text-vtv-red transition">${item.title}</h4>
+										</div>
+									`).join('')}
+								</div>
+							</div>
+
+							
+							 <!-- Nút phải -->
+							<button 
+								class="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-black/60 hover:bg-black text-white p-3 rounded-full backdrop-blur cursor-pointer hidden md:flex"
+								onclick="scrollCategory(this, 300)">
+								<i data-lucide="chevron-right"></i>
+							</button>
+
+							
                         </div>
                     </div>
                 </section>
@@ -667,6 +684,11 @@
         window.navigateToDetail = (id) => {
             renderDetail(id);
         };
+		
+		window.scrollCategory = (button, amount) => {
+			const wrapper = button.parentElement.querySelector(".category-scroll");
+			wrapper.scrollBy({ left: amount, behavior: "smooth" });
+		};
 
         // --- Initial Init ---
         renderHome();
